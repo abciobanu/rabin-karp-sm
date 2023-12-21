@@ -61,4 +61,9 @@ typedef struct RabinKarpOutput {
 } output_t;
 
 
+input_t **parse_all_input_files(const char *root_folder, int num_tests);
+output_t **parse_all_ref_files(const char *root_folder, input_t **inputs, int num_tests);
+void destroy_tests(input_t **inputs, output_t **outputs, int num_tests);
+int check_correctness(output_t *output, output_t *gt);
+
 #endif
