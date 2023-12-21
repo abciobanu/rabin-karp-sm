@@ -284,3 +284,78 @@ void destroy_tests(input_t **inputs, output_t **outputs, int num_tests) {
     free(inputs);
     free(outputs);
 }
+
+int cmp_patterns(const void *a, const void *b) {
+    const pattern_w_idx_t *patternA = *(const pattern_w_idx_t **)a;
+    const pattern_w_idx_t *patternB = *(const pattern_w_idx_t **)b;
+
+    return strcmp(patternA->pattern, patternB->pattern);
+}
+
+int cmp_indexes(const void *a, const void *b) {
+    return *((int *)a) - *((int *)b);
+}
+
+int check_correctness(output_t *output, output_t *gt) {
+    /** @brief Compares two output structs.
+     * @param output The output produced by your program
+     * @param gt The ref / ground truth.
+     * @return 0 if they are equal, 1 otherwise, and also prints the diff.
+     */
+    if (output->n_patterns != gt->n_patterns) {
+        printf(
+            "Different num of patterns: %d (output) vs %d (gt)\n",
+            output->n_patterns, gt->n_patterns
+        );
+        return 1;
+    }
+
+    qsort(
+        output->identified_patterns, output->n_patterns, sizeof(pattern_w_idx_t *), cmp_patterns
+    );
+    qsort(
+        gt->identified_patterns, gt->n_patterns, sizeof(pattern_w_idx_t *), cmp_patterns
+    );
+
+    for (int i = 0; i < output->n_patterns; i++) {
+        char *output_pattern = output->identified_patterns[i]->pattern;
+        char *gt_pattern = gt->identified_patterns[i]->pattern;
+
+        if (strcmp(output_pattern, gt_pattern) != 0) {
+            printf(
+                "Different patterns found at index (after sorting) %d: %s (output) vs %s (gt)\n",
+                i, output_pattern, gt_pattern
+            );
+            return 1;
+        }
+
+        int output_len = output->identified_patterns[i]->len;
+        int gt_len = gt->identified_patterns[i]->len;
+
+        if (output_len != gt_len) {
+            printf(
+                "Different length for pattern %s: %d (output) vs %d (gt)\n",
+                output_pattern, output_len, gt_len
+            );
+            return 1;
+        }
+
+        int *output_indexes = output->identified_patterns[i]->indexes;
+        int *gt_indexes = gt->identified_patterns[i]->indexes;
+
+        qsort(output_indexes, output_len, sizeof(int), cmp_indexes);
+        qsort(gt_indexes, gt_len, sizeof(int), cmp_indexes);
+
+        for (int j = 0; j < output_len; j++) {
+            if (output_indexes[j] != gt_indexes[j]) {
+                printf(
+                    "Indexes differ at position %d: %d (output) vs %d gt for pattern %s\n",
+                    j, output_indexes[j], gt_indexes[j]
+                );
+                return 1;
+            }
+        }
+    }
+
+    return 0;
+}
