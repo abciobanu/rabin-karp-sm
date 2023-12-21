@@ -64,4 +64,7 @@ output_t **parse_all_ref_files(const char *root_folder, input_t **inputs,
 void destroy_tests(input_t **inputs, output_t **outputs, int num_tests);
 int check_correctness(output_t *output, output_t *gt);
 
+pattern_w_idx_t *alloc_pattern_w_idx();
+void free_output_struct(output_t *ptr);
+
 #endif
