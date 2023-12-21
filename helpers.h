@@ -36,6 +36,12 @@ typedef struct RabinKarpInput {
 } input_t;
 
 
+/**
+ * @brief Struct for handling an identified pattern.
+ * @var pattern: The pattern.
+ * @var len: The number of times the pattern has been identified.
+ * @var indexes: An array containing the indexes where the pattern has been identified.
+*/
 typedef struct IdentifiedPattern {
     char *pattern;
     int len;
