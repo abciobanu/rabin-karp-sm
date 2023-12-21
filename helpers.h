@@ -8,6 +8,8 @@
 #define MAX_FOUND_PATTERNS 10000
 #define MAX_OUTPUT_LINE_LENGTH MAX_PATTERN_LENGTH + MAX_FOUND_PATTERNS * 4
 
+#define MAX_FILE_PATH 100
+
 
 /**
  * @brief fgets can leave a '\n' at the end of the string, this macro removes
