@@ -3,10 +3,10 @@
 
 #include <string.h>
 
-#define MAX_TEXT_LENGTH 100001
-#define MAX_PATTERN_LENGTH 85
+#define MAX_TEXT_LENGTH 100005
+#define MAX_PATTERN_LENGTH 205
 #define MAX_FOUND_PATTERNS 10000
-#define MAX_PATTERN_DIGITS 5
+#define MAX_PATTERN_DIGITS 6
 #define MAX_OUTPUT_LINE_LENGTH                                                 \
   MAX_PATTERN_LENGTH + MAX_FOUND_PATTERNS *MAX_PATTERN_DIGITS
 
