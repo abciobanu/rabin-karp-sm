@@ -1,4 +1,4 @@
-all: build_helpers build_rabin_karp_seq build_rabin_karp_openmp build_rabin_karp_pthreads build_rabin_karp_mpi
+all: build_helpers build_rabin_karp_seq build_rabin_karp_openmp build_rabin_karp_pthreads build_rabin_karp_mpi build_rabin_karp_mpi_openmp
 run: test_seq test_openmp test_pthreads test_mpi test_mpi_openmp
 
 CC=gcc
