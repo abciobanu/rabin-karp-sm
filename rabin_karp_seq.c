@@ -37,7 +37,7 @@ output_t *rabin_karp_seq(input_t *input) {
   int n_patterns = input->n_patterns;
   char **patterns = input->patterns;
 
-  int text_length = strlen(text);
+  size_t text_length = strlen(text);
 
   // Initialize output parameters
   output_t *output = (output_t *)(malloc(sizeof(output_t)));
@@ -62,8 +62,8 @@ output_t *rabin_karp_seq(input_t *input) {
     output->identified_patterns[i] = alloc_pattern_w_idx();
     if (output->identified_patterns[i] == NULL) {
       perror("Error allocating memory for output.identified_patterns[i]\n");
-      free(output);
       free(output->identified_patterns);
+      free(output);
       return NULL;
     }
   }
@@ -71,7 +71,7 @@ output_t *rabin_karp_seq(input_t *input) {
   // Do the search for each pattern
   for (int pattern_idx = 0; pattern_idx < n_patterns; ++pattern_idx) {
     char *pattern = patterns[pattern_idx];
-    int pattern_length = strlen(pattern);
+    size_t pattern_length = strlen(pattern);
 
     output->identified_patterns[pattern_idx]->pattern = pattern;
 
@@ -79,8 +79,8 @@ output_t *rabin_karp_seq(input_t *input) {
     int pattern_hash = compute_hash(pattern, pattern_length);
 
     // Move the sliding window over the text
-    int sliding_points = text_length - pattern_length;
-    for (int text_offset = 0; text_offset <= sliding_points; ++text_offset) {
+    size_t sliding_points = text_length - pattern_length;
+    for (size_t text_offset = 0; text_offset <= sliding_points; ++text_offset) {
       // Compute the hash of the current window
       int text_window_hash = compute_hash(text + text_offset, pattern_length);
 
