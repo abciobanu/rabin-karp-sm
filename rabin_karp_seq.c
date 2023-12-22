@@ -72,7 +72,7 @@ output_t *rabin_karp_seq(input_t *input) {
     char *pattern = patterns[pattern_idx];
     size_t pattern_length = strlen(pattern);
 
-    output->identified_patterns[pattern_idx]->pattern = pattern;
+    strcpy(output->identified_patterns[pattern_idx]->pattern, pattern);
     output->identified_patterns[pattern_idx]->len = 0;
 
     // Compute the hash of the current pattern
@@ -127,6 +127,8 @@ int main(int argc, char *argv[]) {
     // Check correctness
     const char *correctness = check_correctness(output, ref[i]) ? "FAILED" : "PASSED";
     printf("test %d: %s\n", i, correctness);
+
+    free_output_struct(output);
   }
 
   destroy_tests(inputs, ref, number_of_tests);
