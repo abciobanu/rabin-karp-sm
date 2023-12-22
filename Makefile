@@ -1,4 +1,6 @@
-all: build_helpers build_rabin_karp_seq build_rabin_karp_openmp build_rabin_karp_pthreads build_rabin_karp_mpi test_seq test_openmp test_pthreads test_mpi test_mpi_openmp
+all: build_helpers build_rabin_karp_seq build_rabin_karp_openmp build_rabin_karp_pthreads build_rabin_karp_mpi
+run: test_seq test_openmp test_pthreads test_mpi test_mpi_openmp
+
 CC=gcc
 MPICC=mpicc
 CFLAGS=-std=gnu99 -Wall -Wextra
