@@ -4,7 +4,6 @@
 #include "helpers.h"
 #include <pthread.h>
 
-
 typedef struct PThreadPatternArg {
   int start;
   int end;

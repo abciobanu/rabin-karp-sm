@@ -40,20 +40,22 @@ void *thread_text_fn(void *arg) {
   char *pattern = text_arg->pattern;
   output_t *output = text_arg->output;
 
-  for (size_t text_offset = text_arg->start; text_offset < text_arg->end; ++text_offset) {
-      // Compute the hash of the current window
-      int text_window_hash = compute_hash(text + text_offset, pattern_length);
-      if (text_window_hash == pattern_hash) {
-        int is_matching =
-            is_pattern_matching(text, text_offset, pattern, pattern_length);
-        if (is_matching) {
-          pthread_mutex_lock(text_arg->lock);
-          output->identified_patterns[text_arg->pattern_idx]
-              ->indexes[output->identified_patterns[text_arg->pattern_idx]->len++] = text_offset;
-          pthread_mutex_unlock(text_arg->lock);
-        }
+  for (size_t text_offset = text_arg->start; text_offset < text_arg->end;
+       ++text_offset) {
+    // Compute the hash of the current window
+    int text_window_hash = compute_hash(text + text_offset, pattern_length);
+    if (text_window_hash == pattern_hash) {
+      int is_matching =
+          is_pattern_matching(text, text_offset, pattern, pattern_length);
+      if (is_matching) {
+        pthread_mutex_lock(text_arg->lock);
+        output->identified_patterns[text_arg->pattern_idx]
+            ->indexes[output->identified_patterns[text_arg->pattern_idx]
+                          ->len++] = text_offset;
+        pthread_mutex_unlock(text_arg->lock);
       }
     }
+  }
 
   return NULL;
 }
@@ -89,34 +91,37 @@ void *thread_pattern_fn(void *arg) {
     pthread_mutex_t lock;
     pthread_mutex_init(&lock, NULL);
 
-  for (int j = 0; j < NUM_MAIN_THREADS; j++) {
-        args[j].start = j * (double) (sliding_points + 1) / NUM_MAIN_THREADS;
-        args[j].end = MIN((j + 1) * (double) (sliding_points + 1) / NUM_MAIN_THREADS, sliding_points + 1);
-        args[j].text = text;
-        args[j].text_length = text_length;
-        args[j].pattern_length = pattern_length;
-        args[j].pattern_hash = pattern_hash;
-        args[j].pattern = pattern;
-        args[j].output = output;
-        args[j].pattern_idx = i;
-        args[j].lock = &lock;
-        int r = pthread_create(&threads[j], NULL, thread_text_fn, (void *)&args[j]);
+    for (int j = 0; j < NUM_MAIN_THREADS; j++) {
+      args[j].start = j * (double)(sliding_points + 1) / NUM_MAIN_THREADS;
+      args[j].end =
+          MIN((j + 1) * (double)(sliding_points + 1) / NUM_MAIN_THREADS,
+              sliding_points + 1);
+      args[j].text = text;
+      args[j].text_length = text_length;
+      args[j].pattern_length = pattern_length;
+      args[j].pattern_hash = pattern_hash;
+      args[j].pattern = pattern;
+      args[j].output = output;
+      args[j].pattern_idx = i;
+      args[j].lock = &lock;
+      int r =
+          pthread_create(&threads[j], NULL, thread_text_fn, (void *)&args[j]);
 
-        if (r) {
-            exit(-1);
-        }
-  }
-
-  for (int i = 0; i < NUM_MAIN_THREADS; i++) {
-    void *s;
-    int r = pthread_join(threads[i], &s);
-
-    if (r) {
-      exit(-1);
+      if (r) {
+        exit(-1);
+      }
     }
-  }
 
-  pthread_mutex_destroy(&lock);
+    for (int i = 0; i < NUM_MAIN_THREADS; i++) {
+      void *s;
+      int r = pthread_join(threads[i], &s);
+
+      if (r) {
+        exit(-1);
+      }
+    }
+
+    pthread_mutex_destroy(&lock);
   }
 
   return NULL;
@@ -153,18 +158,19 @@ output_t *rabin_karp_pthreads(input_t *input) {
   int threads_count = MIN(NUM_MAIN_THREADS, n_patterns);
 
   for (int i = 0; i < threads_count; i++) {
-        args[i].start = i * (double) n_patterns / threads_count;
-        args[i].end = MIN((i + 1) * (double) n_patterns / threads_count, n_patterns);
-        args[i].output = output;
-        args[i].patterns = patterns;
-        args[i].text = text;
-        args[i].text_length = text_length;
+    args[i].start = i * (double)n_patterns / threads_count;
+    args[i].end = MIN((i + 1) * (double)n_patterns / threads_count, n_patterns);
+    args[i].output = output;
+    args[i].patterns = patterns;
+    args[i].text = text;
+    args[i].text_length = text_length;
 
-        int r = pthread_create(&threads[i], NULL, thread_pattern_fn, (void *)&args[i]);
+    int r =
+        pthread_create(&threads[i], NULL, thread_pattern_fn, (void *)&args[i]);
 
-        if (r) {
-            exit(-1);
-        }
+    if (r) {
+      exit(-1);
+    }
   }
 
   for (int i = 0; i < threads_count; i++) {
