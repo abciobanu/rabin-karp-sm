@@ -79,7 +79,7 @@ output_t *rabin_karp_omp(input_t *input) {
     char *pattern = patterns[pattern_idx];
     size_t pattern_length = strlen(pattern);
 
-    output->identified_patterns[pattern_idx]->pattern = pattern;
+    strcpy(output->identified_patterns[pattern_idx]->pattern, pattern);
     output->identified_patterns[pattern_idx]->len = 0;
 
     // Compute the hash of the current pattern
@@ -96,6 +96,7 @@ output_t *rabin_karp_omp(input_t *input) {
         int is_matching =
             is_pattern_matching(text, text_offset, pattern, pattern_length);
         if (is_matching) {
+          #pragma omp critical
           output->identified_patterns[pattern_idx]
               ->indexes[output->identified_patterns[pattern_idx]->len++] =
               text_offset;
@@ -142,6 +143,7 @@ int main(int argc, char *argv[]) {
     // Check correctness
     const char *correctness = check_correctness(output, ref[i]) ? "FAILED" : "PASSED";
     printf("test %d: %s\n", i, correctness);
+    free_output_struct(output);
   }
 
   destroy_tests(inputs, ref, number_of_tests);
