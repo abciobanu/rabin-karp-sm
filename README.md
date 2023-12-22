@@ -19,3 +19,25 @@ return ''.join(choices(ascii_letters + ' ', k=length))
 ```
 (just add special characters to `ascii_letters + ' '`)
 
+
+### OpenMP
+* The parallelization using OpenMP was very easy to implement starting from
+the sequential one. Just by adding some parallel fors, the program was significantly
+speeded up.
+* Also, `#pragma omp critical` was needed for avoiding a data race.
+
+### PThreads
+* More quicker than OpenMP implementation, but obviously not so pretty, because
+of nested threads.
+Firstly, the array of patterns was splitted, each thread having its own range.
+Secondly, each thread will launch. for each search, multiple threads.
+* The nice part comes to synchronization, only a mutex was needed for adding to
+the indexes array.
+
+
+### Tests
+* `tests` are generated with the default parameters of `test_cooker.py`.
+* `large_tests` are generated like this:
+```bash
+python test_cooker.py --max_test=20 --min_text=10000 --max_text=100000 --min_pattern=10 --max_pattern=200 -o large_tests
+```
