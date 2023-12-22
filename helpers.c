@@ -218,10 +218,11 @@ input_t **parse_all_input_files(const char *root_folder, int num_tests) {
     return NULL;
   }
 
-  int i = 0;
   while ((entry = readdir(dir)) != NULL) {
     if (entry->d_type == DT_REG && strstr(entry->d_name, ".in") != NULL) {
       char full_path[MAX_FILE_PATH];
+      int test_num;
+      sscanf(entry->d_name, "test%d.in", &test_num);
       // watchout for the separator, if there are errors on your platform
       snprintf(full_path, MAX_FILE_PATH, "%s/%s", root_folder,
                entry->d_name);
@@ -231,7 +232,7 @@ input_t **parse_all_input_files(const char *root_folder, int num_tests) {
         perror("Failed to parse input files!");
         exit(-1);
       }
-      res[i++] = input_ptr;
+      res[test_num] = input_ptr;
     }
   }
 
@@ -264,21 +265,22 @@ output_t **parse_all_ref_files(const char *root_folder, input_t **inputs,
     return NULL;
   }
 
-  int i = 0;
   while ((entry = readdir(dir)) != NULL) {
     if (entry->d_type == DT_REG && strstr(entry->d_name, ".ref") != NULL) {
       char full_path[MAX_FILE_PATH];
+      int test_num;
+      sscanf(entry->d_name, "test%d.in", &test_num);
       // watchout for the separator, if there are errors on your platform
       snprintf(full_path, sizeof(full_path), "%s/%s", root_folder,
                entry->d_name);
       output_t *output_ptr =
-          parse_output_file(full_path, inputs[i]->n_patterns);
+          parse_output_file(full_path, inputs[test_num]->n_patterns);
       if (!output_ptr) {
         free(res);
         perror("Failed to parse ref files!");
         exit(-1);
       }
-      res[i++] = output_ptr;
+      res[test_num] = output_ptr;
     }
   }
 
