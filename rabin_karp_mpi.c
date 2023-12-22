@@ -445,7 +445,12 @@ int main(int argc, char *argv[]) {
                  &status);
 
         // Receive the text from MAPPER_RANK
-        char text[text_length + 1];
+        char *text = (char *)(malloc((text_length + 1) * sizeof(char)));
+        if (text == NULL) {
+          perror("Error allocating memory for text");
+          MPI_Finalize();
+          exit(EXIT_FAILURE);
+        }
         MPI_Recv(text, text_length, MPI_CHAR, MAPPER_RANK, 0, MPI_COMM_WORLD,
                  &status);
 
