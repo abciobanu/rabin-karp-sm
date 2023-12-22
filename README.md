@@ -1,5 +1,8 @@
 # HW 2 - SM
 
+**Team members:** Andrei-Bogdan Ciobanu (341C1) & Radu-Andrei Dumitru (341C1).
+
+
 ### `test_cooker.py`
 * A lot of parameters can be modified by providing arguments to the command
 (check the main function, the parameters are described by the help field).
