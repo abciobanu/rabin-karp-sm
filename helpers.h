@@ -4,11 +4,12 @@
 #include <string.h>
 
 #define MAX_TEXT_LENGTH 100001
-#define MAX_PATTERN_LENGTH 81
+#define MAX_PATTERN_LENGTH 85
 #define MAX_FOUND_PATTERNS 10000
-#define MAX_OUTPUT_LINE_LENGTH MAX_PATTERN_LENGTH + MAX_FOUND_PATTERNS * 4
+#define MAX_PATTERN_DIGITS 5
+#define MAX_OUTPUT_LINE_LENGTH MAX_PATTERN_LENGTH + MAX_FOUND_PATTERNS * MAX_PATTERN_DIGITS
 
-#define MAX_FILE_PATH 100
+#define MAX_FILE_PATH 300
 
 /**
  * @brief fgets can leave a '\n' at the end of the string, this macro removes

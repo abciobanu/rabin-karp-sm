@@ -67,13 +67,13 @@ output_t *rabin_karp_seq(input_t *input) {
       return NULL;
     }
   }
-
   // Do the search for each pattern
   for (int pattern_idx = 0; pattern_idx < n_patterns; ++pattern_idx) {
     char *pattern = patterns[pattern_idx];
     size_t pattern_length = strlen(pattern);
 
     output->identified_patterns[pattern_idx]->pattern = pattern;
+    output->identified_patterns[pattern_idx]->len = 0;
 
     // Compute the hash of the current pattern
     int pattern_hash = compute_hash(pattern, pattern_length);
@@ -83,11 +83,9 @@ output_t *rabin_karp_seq(input_t *input) {
     for (size_t text_offset = 0; text_offset <= sliding_points; ++text_offset) {
       // Compute the hash of the current window
       int text_window_hash = compute_hash(text + text_offset, pattern_length);
-
       if (text_window_hash == pattern_hash) {
         int is_matching =
             is_pattern_matching(text, text_offset, pattern, pattern_length);
-
         if (is_matching) {
           output->identified_patterns[pattern_idx]
               ->indexes[output->identified_patterns[pattern_idx]->len++] =
@@ -119,6 +117,7 @@ int main(int argc, char *argv[]) {
 
   for (int i = 0; i < number_of_tests; i++) {
     output_t *output = rabin_karp_seq(inputs[i]);
+
     if (output == NULL) {
       perror("Error computing the output");
       destroy_tests(inputs, ref, number_of_tests);
@@ -126,7 +125,8 @@ int main(int argc, char *argv[]) {
     }
 
     // Check correctness
-    check_correctness(output, ref[i]);
+    const char *correctness = check_correctness(output, ref[i]) ? "FAILED" : "PASSED";
+    printf("test %d: %s\n", i, correctness);
   }
 
   destroy_tests(inputs, ref, number_of_tests);
