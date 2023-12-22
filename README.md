@@ -40,7 +40,7 @@ the indexes array.
 ### MPI
 * The programming model used for this implementation follows the same pattern used
 in [the APP project](https://gitlab.cs.pub.ro/app-2023/huffmanescu). For both that
-project and this one, the implementation with MPI was written entirely by me.
+project and this one, the implementation with MPI was written entirely by me, Andrei Ciobanu.
 * Slower than the other two implementations, but faster than the sequential one.
 * The algorithm has three kinds of processes:
     * MAPPER (MASTER) process
