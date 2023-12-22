@@ -27,7 +27,9 @@ input_t *parse_input_file(const char *fname) {
     goto failure_input_file;
   }
 
-  fscanf(fp, "%d\n", &res->n_patterns);
+  char buffer[MAX_PATTERN_DIGITS];
+  fgets(buffer, MAX_PATTERN_DIGITS, fp);
+  res->n_patterns = atoi(buffer);
 
   res->patterns = (char **)(malloc(res->n_patterns * sizeof(char *)));
   if (!res->patterns) {
@@ -127,6 +129,9 @@ output_t *parse_output_file(const char *fname, int n_patterns) {
   }
 
   char *buffer = (char *)(malloc(MAX_OUTPUT_LINE_LENGTH * sizeof(char)));
+  if (!buffer) {
+    goto failure_output_buffer;
+  }
   int i;
   for (i = 0; i < n_patterns; i++) {
     fgets(buffer, MAX_OUTPUT_LINE_LENGTH, fp);
@@ -149,7 +154,7 @@ output_t *parse_output_file(const char *fname, int n_patterns) {
     res->identified_patterns[i]->indexes[res->identified_patterns[i]->len++] =
         atoi(number);
 
-    while (number = strtok(NULL, " ")) {
+    while ((number = strtok(NULL, " "))) {
       res->identified_patterns[i]->indexes[res->identified_patterns[i]->len++] =
           atoi(number);
     }
@@ -218,7 +223,7 @@ input_t **parse_all_input_files(const char *root_folder, int num_tests) {
     if (entry->d_type == DT_REG && strstr(entry->d_name, ".in") != NULL) {
       char full_path[MAX_FILE_PATH];
       // watchout for the separator, if there are errors on your platform
-      snprintf(full_path, sizeof(full_path), "%s/%s", root_folder,
+      snprintf(full_path, MAX_FILE_PATH, "%s/%s", root_folder,
                entry->d_name);
       input_t *input_ptr = parse_input_file(full_path);
       if (!input_ptr) {
@@ -350,7 +355,7 @@ int check_correctness(output_t *output, output_t *gt) {
       if (output_indexes[j] != gt_indexes[j]) {
         printf("Indexes differ at position %d: %d (output) vs %d gt for "
                "pattern %s\n",
-               j, output_indexes[j], gt_indexes[j]);
+               j, output_indexes[j], gt_indexes[j], gt_pattern);
         return 1;
       }
     }
