@@ -1,7 +1,7 @@
 all: helpers rabin_karp_seq
-CC=gcc-13
+CC=gcc
 MPICC=mpicc
-CFLAGS=
+CFLAGS=-std=gnu99 -Wall -Wextra
 
 # Helpers
 HELPERS := helpers.c
