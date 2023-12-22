@@ -7,7 +7,8 @@
 #define MAX_PATTERN_LENGTH 85
 #define MAX_FOUND_PATTERNS 10000
 #define MAX_PATTERN_DIGITS 5
-#define MAX_OUTPUT_LINE_LENGTH MAX_PATTERN_LENGTH + MAX_FOUND_PATTERNS * MAX_PATTERN_DIGITS
+#define MAX_OUTPUT_LINE_LENGTH                                                 \
+  MAX_PATTERN_LENGTH + MAX_FOUND_PATTERNS *MAX_PATTERN_DIGITS
 
 #define MAX_FILE_PATH 300
 
@@ -23,6 +24,8 @@
       str[len - 1] = '\0';                                                     \
     }                                                                          \
   } while (0)
+
+#define MIN(x, y) x < y ? x : y;
 
 /**
  * @brief Struct for handling the input.
