@@ -1,4 +1,4 @@
-all: helpers rabin_karp_seq
+all: helpers rabin_karp_seq rabin_karp_openmp rabin_karp_pthreads
 CC=gcc
 MPICC=mpicc
 CFLAGS=-std=gnu99 -Wall -Wextra
@@ -9,13 +9,25 @@ HELPERS := helpers.c
 # Sequential Rabin-Karp
 SEQ_RABIN_KARP := rabin_karp_seq.c
 
+# OpenMP Rabin-Karp
+OPENMP_RABIN_KARP := rabin_karp_openmp.c
+
+# PThreads Rabin-Karp
+PTHREADS_RABIN_KARP := rabin_karp_pthreads.c
+
 helpers: $(HELPERS)
-	$(CC) -std=c11 -c $(HELPERS) -o helpers.o $(CFLAGS)
+	$(CC) -c $(HELPERS) -o helpers.o $(CFLAGS)
 
 rabin_karp_seq: $(HELPERS) $(SEQ_RABIN_KARP)
-	$(CC) -std=c11 $(HELPERS) $(SEQ_RABIN_KARP) -o rabin_karp_seq $(CFLAGS)
+	$(CC) $(HELPERS) $(SEQ_RABIN_KARP) -o rabin_karp_seq $(CFLAGS)
+
+rabin_karp_openmp: $(HELPERS) $(OPENMP_RABIN_KARP)
+	$(CC) $(HELPERS) $(OPENMP_RABIN_KARP) -o rabin_karp_openmp $(CFLAGS) -fopenmp
+
+rabin_karp_pthreads: $(HELPERS) $(PTHREADS_RABIN_KARP)
+	$(CC) $(HELPERS) $(PTHREADS_RABIN_KARP) -o rabin_karp_pthreads $(CFLAGS) -lpthread
 
 clean:
-	@rm -f helpers.o rabin_karp_seq
+	@rm -f helpers.o rabin_karp_seq rabin_karp_openmp rabin_karp_pthreads
 
 .PHONY: all clean
