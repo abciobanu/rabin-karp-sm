@@ -35,6 +35,9 @@ Secondly, each thread will launch. for each search, multiple threads.
 the indexes array.
 
 ### MPI
+* The programming model used for this implementation follows the same pattern used
+in [the APP project](https://gitlab.cs.pub.ro/app-2023/huffmanescu). For both that
+project and this one, the implementation with MPI was written entirely by me.
 * Slower than the other two implementations, but faster than the sequential one.
 * The algorithm has three kinds of processes:
     * MAPPER (MASTER) process
@@ -69,6 +72,11 @@ OpenMP implementation).
 ```bash
 python test_cooker.py --max_test=20 --min_text=10000 --max_text=100000 --min_pattern=10 --max_pattern=200 -o large_tests
 ```
+
+
+### Compiling and running
+* `make` will compile all the implementations.
+* `make run` will run all the implementations on the `tests` directory.
 
 
 ### Test run
@@ -152,3 +160,8 @@ real	0m47.628s
 user	4m50.670s
 sys	0m2.471s
 ```
+
+### References
+* [Rabin–Karp algorithm](https://en.wikipedia.org/wiki/Rabin%E2%80%93Karp_algorithm)
+* [Rabin fingerprint](https://en.wikipedia.org/wiki/Rabin_fingerprint)
+* [Huffmanescu](https://gitlab.cs.pub.ro/app-2023/huffmanescu)
